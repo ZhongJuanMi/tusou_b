@@ -8,9 +8,18 @@
     "prd": "pm2 start bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "standard": {
+    "ignore": [
+      "*.min.js",
+      "**/.build/",
+      "**/node_modules/"
+    ]
+  },
   "dependencies": {
     "debug": "^2.6.3",
     "koa": "^2.2.0",
+    "jsonwebtoken": "^8.3.0",
+    "koa-jwt": "^3.3.2",
     "koa-bodyparser": "^3.2.0",
     "koa-convert": "^1.2.0",
     "koa-json": "^2.0.2",
