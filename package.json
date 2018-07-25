@@ -8,13 +8,6 @@
     "prd": "pm2 start bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "standard": {
-    "ignore": [
-      "*.min.js",
-      "**/.build/",
-      "**/node_modules/"
-    ]
-  },
   "dependencies": {
     "debug": "^2.6.3",
     "koa": "^2.2.0",
