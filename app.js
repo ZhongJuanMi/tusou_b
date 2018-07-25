@@ -12,8 +12,6 @@ const index = require('./routes/index')
 const users = require('./routes/users')
 const api = require('./routes/api')
 const response_formatter = require('./middlewares/response_formatter')
-const jwtKoa = require('koa-jwt')
-const secret = 'jwt demo'
 // app.use(jwtKoa({
 //   secret
 // }).unless({
