@@ -7,7 +7,7 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const router = require('koa-router')()
 // CORS是一个W3C标准，全称是"跨域资源共享"（Cross-origin resource sharing）。
-const cors = require('koa2-cors');
+const cors = require('koa2-cors')
 const index = require('./routes/index')
 const users = require('./routes/users')
 const api = require('./routes/api')
@@ -28,16 +28,18 @@ app.use(
     enableTypes: ['json', 'form', 'text']
   })
 )
-app.use(cors({
-  origin: function (ctx) {
-    return 'http://localhost:3000';
-  },
-  exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-  maxAge: 5,
-  credentials: true,
-  allowMethods: ['GET', 'POST', 'DELETE'],
-  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
-}))
+app.use(
+  cors({
+    origin: function(ctx) {
+      return 'http://47.106.200.223:3000'
+    },
+    exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+    maxAge: 5,
+    credentials: true,
+    allowMethods: ['GET', 'POST', 'DELETE'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept']
+  })
+)
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
