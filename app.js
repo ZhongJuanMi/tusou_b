@@ -28,14 +28,13 @@ app.use(
 )
 app.use(
   cors({
-    origin: function(ctx) {
+    origin: function (ctx) {
       return '*'
     },
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
     maxAge: 5,
-    credentials: true,
     allowMethods: ['GET', 'POST', 'DELETE'],
-    allowHeaders: ['Content-Type', 'Authorization', 'Accept']
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'authorization']
   })
 )
 app.use(json())
