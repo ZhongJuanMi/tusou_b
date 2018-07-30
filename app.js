@@ -29,7 +29,7 @@ app.use(
 app.use(
   cors({
     origin: function (ctx) {
-      return '*'
+      return 'http://47.106.200.223:3000'
     },
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
     maxAge: 5,
