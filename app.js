@@ -34,7 +34,7 @@ app.use(
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
     maxAge: 5,
     allowMethods: ['GET', 'POST', 'DELETE'],
-    allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'authorization']
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'authorization', 'X-Requested-With']
   })
 )
 app.use(json())
