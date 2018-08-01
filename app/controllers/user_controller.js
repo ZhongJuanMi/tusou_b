@@ -48,19 +48,6 @@ exports.logUser = async (ctx, next) => {
   // 生成token
   if (user) {
     const token = createToken(user.name, user.id)
-    // let {
-    //   name,
-    //   height,
-    //   gender,
-    //   idealWeight
-    // } = user
-    // console.log(3444, name, hieght, gender, idealWeight)
-    let userInfo = {
-      name: user.name,
-      height: user.height,
-      gender: user.gender,
-      idealWeight: user.idealWeight
-    }
     ctx.body = {
       userInfo: {
         name: user.name,
@@ -81,12 +68,26 @@ exports.registerUser = async (ctx, next) => {
     name,
     password
   } = ctx.request.body
-  // const token = createToken(name)
   await User.create({
     name,
     password
   })
-  this.logUser(ctx, next)
+  let user = await User.findOne({
+    where: {
+      name,
+      password
+    }
+  })
+  const token = createToken(user.name, user.id)
+  ctx.body = {
+    userInfo: {
+      name: user.name,
+      height: user.height,
+      gender: user.gender,
+      idealWeight: user.idealWeight
+    },
+    token
+  }
 }
 
 // 获取用户信息
