@@ -12,8 +12,8 @@ var response_formatter = (ctx) => {
     }
   } else {
     ctx.body = {
-      code: 2001,
-      message: 'nulldata'
+      code: 2000,
+      message: 'success'
     }
   }
 }

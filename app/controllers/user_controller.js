@@ -17,9 +17,7 @@ exports.ifUser = async (ctx, next) => {
       name
     }
   })
-  ctx.body = {
-    has: result ? true : false
-  }
+  ctx.body = result ? 1 : 0
 }
 // 生成token
 function createToken(name, id) {
@@ -53,7 +51,8 @@ exports.logUser = async (ctx, next) => {
         name: user.name,
         height: user.height,
         gender: user.gender,
-        idealWeight: user.idealWeight
+        idealWeight: user.idealWeight,
+        is_tz:user.is_tz
       },
       token
     }
@@ -84,7 +83,8 @@ exports.registerUser = async (ctx, next) => {
       name: user.name,
       height: user.height,
       gender: user.gender,
-      idealWeight: user.idealWeight
+      idealWeight: user.idealWeight,
+      is_tz:user.is_tz
     },
     token
   }
@@ -111,16 +111,17 @@ exports.getUser = async (ctx, next) => {
           height,
           age,
           gender,
-          idealWeight
+          idealWeight,
+          is_tz
         } = user
         ctx.body = {
-          has: true,
           userInfo: {
             name,
             height,
             age,
             gender,
-            idealWeight
+            idealWeight,
+            is_tz
           }
         }
       } else {
