@@ -34,6 +34,9 @@ exports.User = this.sequelize.define('user', {
   gender: {
     type: Sequelize.STRING
   },
+  user_pic:{
+    type: Sequelize.STRING
+  },
   is_tz: {
     type: Sequelize.STRING
   }
