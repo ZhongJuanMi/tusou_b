@@ -149,17 +149,15 @@ exports.setInfo = async (ctx, next) => {
   if (token) {
     try {
       let {
-        name,
         id
       } = await verify(token.split(' ')[1], secret)
       let user = await User.findOne({
         where: {
-          id,
-          name
+          id
         }
       })
       if (user) {
-        await User.update({
+        await user.update({
           height,
           idealWeight,
           gender,
