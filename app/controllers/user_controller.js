@@ -141,7 +141,9 @@ exports.setInfo = async (ctx, next) => {
   let {
     height,
     idealWeight,
-    gender
+    gender,
+    name,
+    user_pic
   } = ctx.request.body
   let token = ctx.header.authorization
   if (token) {
@@ -160,11 +162,12 @@ exports.setInfo = async (ctx, next) => {
         await User.update({
           height,
           idealWeight,
-          gender
+          gender,
+          name,
+          user_pic
         }, {
           where: {
-            id,
-            name
+            id
           }
         })
       } else {
