@@ -113,7 +113,7 @@ function weightPer(ary) {
       for (let j in temp) {
         if (ary[i].date == temp[j].date) {
           flag = false
-          temp[j].weight = (Number(ary[i].weight) + Number(temp[j].weight)) / 2
+          temp[j].weight = ((Number(ary[i].weight) + Number(temp[j].weight)) / 2).toFixed(2)
         }
       }
       if (flag) {
