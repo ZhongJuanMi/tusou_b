@@ -1,3 +1,3 @@
-exports.imgupload=(ctx,next)=>{
+exports.imgupload=async (ctx,next)=>{
   ctx.body = ctx.req.file.path.substr(7)
 }
