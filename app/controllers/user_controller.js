@@ -5,7 +5,7 @@ const {
 const jwt = require('jsonwebtoken')
 const util = require('util')
 const verify = util.promisify(jwt.verify) // 解密
-const secret = 'jwt demo'
+const secret = 'tuzatuza0713'
 const ApiError = require('../error/ApiError');
 const ApiErrorNames = require('../error/ApiErrorNames');
 
@@ -37,22 +37,23 @@ exports.logUser = async (ctx, next) => {
     name,
     password
   } = ctx.request.body
-  let user = await User.findOne({
+  let result = await User.findOne({
     where: {
       name,
       password
     }
   })
   // 生成token
-  if (user) {
-    const token = createToken(user.name, user.id)
+  if (result) {
+    const token = createToken(result.name, result.id)
     ctx.body = {
       userInfo: {
-        name: user.name,
-        height: user.height,
-        gender: user.gender,
-        idealWeight: user.idealWeight,
-        is_tz:user.is_tz
+        name: result.name,
+        height: result.height,
+        gender: result.gender,
+        idealWeight: result.idealWeight,
+        is_tz:result.is_tz,
+        user_pic:result.user_pic
       },
       token
     }
@@ -96,32 +97,29 @@ exports.getUser = async (ctx, next) => {
   if (token) {
     try {
       let {
-        name,
         id
       } = await verify(token.split(' ')[1], secret)
       let user = await User.findOne({
         where: {
-          id,
-          name
+          id
         }
       })
       if (user) {
         let {
           name,
           height,
-          age,
           gender,
           idealWeight,
-          is_tz
+          is_tz,user_pic
         } = user
         ctx.body = {
           userInfo: {
             name,
             height,
-            age,
             gender,
             idealWeight,
-            is_tz
+            is_tz,
+            user_pic
           }
         }
       } else {

@@ -80,18 +80,6 @@ exports.Blog = this.sequelize.define('blog', {
     type:Sequelize.INTEGER
   }
 })
-// 草稿详情表
-exports.Draft = this.sequelize.define('draft', {
-  title: {
-    type: Sequelize.STRING
-  },
-  content: {
-    type: Sequelize.STRING
-  },
-  tags: {
-    type: Sequelize.STRING
-  }
-})
 // 博客分类表
 exports.BlogTags = this.sequelize.define(
   'blogtags',
@@ -114,5 +102,4 @@ exports.BlogTags = this.sequelize.define(
   }
 )
 this.User.hasOne(this.Weight)
-// this.Weight.belongsTo(this.User)
 this.sequelize.sync()

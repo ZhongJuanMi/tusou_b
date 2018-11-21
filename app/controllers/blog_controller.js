@@ -1,4 +1,4 @@
-const { Blog, BlogTags, Draft } = require('./database')
+const { Blog, BlogTags } = require('./database')
 const ApiError = require('../error/ApiError')
 const ApiErrorNames = require('../error/ApiErrorNames')
 var formatDateTime = function(date) {

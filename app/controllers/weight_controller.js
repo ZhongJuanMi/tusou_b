@@ -6,7 +6,7 @@ const {
 const jwt = require('jsonwebtoken')
 const util = require('util')
 const verify = util.promisify(jwt.verify) // 解密
-const secret = 'jwt demo'
+const secret = 'tuzatuza0713'
 const ApiError = require('../error/ApiError');
 const ApiErrorNames = require('../error/ApiErrorNames');
 
@@ -57,7 +57,6 @@ exports.getWeight = async (ctx, next) => {
   if (token) {
     try {
       let {
-        name,
         id
       } = await verify(token.split(' ')[1], secret)
       let user = await User.findAll({
