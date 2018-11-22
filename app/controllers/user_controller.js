@@ -1,14 +1,7 @@
-const {
-  sequelize,
-  User
-} = require('./database')
-const jwt = require('jsonwebtoken')
-const util = require('util')
-const verify = util.promisify(jwt.verify) // 解密
-const secret = 'tuzatuza0713'
-const ApiError = require('../error/ApiError');
-const ApiErrorNames = require('../error/ApiErrorNames');
-
+const { sequelize, User } = require('./database')
+const ApiError = require('../error/ApiError')
+const ApiErrorNames = require('../error/ApiErrorNames')
+const { createToken, verifyID } = require('../utils/token')
 // 校验用户是否已经注册
 exports.ifUser = async (ctx, next) => {
   let name = ctx.query.name
@@ -19,24 +12,10 @@ exports.ifUser = async (ctx, next) => {
   })
   ctx.body = result ? 1 : 0
 }
-// 生成token
-function createToken(name, id) {
-  let userToken = {
-    name,
-    id
-  }
-  const token = jwt.sign(userToken, secret, {
-    expiresIn: '168h'
-  }) //token签名 有效期为7天
 
-  return token
-}
 //用户登录,返回token及用户信息
 exports.logUser = async (ctx, next) => {
-  let {
-    name,
-    password
-  } = ctx.request.body
+  let { name, password } = ctx.request.body
   let result = await User.findOne({
     where: {
       name,
@@ -45,15 +24,15 @@ exports.logUser = async (ctx, next) => {
   })
   // 生成token
   if (result) {
-    const token = createToken(result.name, result.id)
+    const token = createToken(result.id)
     ctx.body = {
       userInfo: {
         name: result.name,
         height: result.height,
         gender: result.gender,
         idealWeight: result.idealWeight,
-        is_tz:result.is_tz,
-        user_pic:result.user_pic
+        is_tz: result.is_tz,
+        user_pic: result.user_pic
       },
       token
     }
@@ -64,31 +43,24 @@ exports.logUser = async (ctx, next) => {
 
 //用户注册,返回token及用户名
 exports.registerUser = async (ctx, next) => {
-  let {
-    name,
-    password
-  } = ctx.request.body
+  let { name, password } = ctx.request.body
   await User.create({
     name,
     password
-  })
-  let user = await User.findOne({
-    where: {
-      name,
-      password
+  }).then(user => {
+    const token = createToken(user.id)
+    ctx.body = {
+      userInfo: {
+        name: user.name,
+        height: user.height,
+        gender: user.gender,
+        idealWeight: user.idealWeight,
+        is_tz: user.is_tz,
+        user_pic: user.user_pic
+      },
+      token
     }
   })
-  const token = createToken(user.name, user.id)
-  ctx.body = {
-    userInfo: {
-      name: user.name,
-      height: user.height,
-      gender: user.gender,
-      idealWeight: user.idealWeight,
-      is_tz:user.is_tz
-    },
-    token
-  }
 }
 
 // 获取用户信息
@@ -96,22 +68,14 @@ exports.getUser = async (ctx, next) => {
   let token = ctx.query.token || ctx.header.authorization
   if (token) {
     try {
-      let {
-        id
-      } = await verify(token.split(' ')[1], secret)
+      let id = await verifyID(token)
       let user = await User.findOne({
         where: {
           id
         }
       })
       if (user) {
-        let {
-          name,
-          height,
-          gender,
-          idealWeight,
-          is_tz,user_pic
-        } = user
+        let { name, height, gender, idealWeight, is_tz, user_pic } = user
         ctx.body = {
           userInfo: {
             name,
@@ -123,9 +87,8 @@ exports.getUser = async (ctx, next) => {
           }
         }
       } else {
-        throw new ApiError(ApiErrorNames.USER_NOT_EXIST);
+        throw new ApiError(ApiErrorNames.USER_NOT_EXIST)
       }
-
     } catch (err) {
       throw new ApiError(ApiErrorNames.TOKEN_EXPIRED_ERROR)
     }
@@ -136,36 +99,36 @@ exports.getUser = async (ctx, next) => {
 
 // 设置用户信息
 exports.setInfo = async (ctx, next) => {
-  let {
-    height,
-    idealWeight,
-    gender,
-    name,
-    user_pic
-  } = ctx.request.body
+  let userInfo = JSON.parse(ctx.req.body.userInfo)
+  if (ctx.req.file) {
+    userInfo.user_pic = ctx.req.file.path.substr(7)
+  }
   let token = ctx.header.authorization
   if (token) {
     try {
-      let {
-        id
-      } = await verify(token.split(' ')[1], secret)
+      let id = await verifyID(token)
       let user = await User.findOne({
         where: {
           id
         }
       })
       if (user) {
-        await user.update({
-          height,
-          idealWeight,
-          gender,
-          name,
-          user_pic
-        }, {
-          where: {
-            id
+        await user.update(
+          { ...userInfo },
+          {
+            where: {
+              id
+            }
           }
-        })
+        )
+        ctx.body = {
+          name: user.name,
+          height: user.height,
+          gender: user.gender,
+          idealWeight: user.idealWeight,
+          is_tz: user.is_tz,
+          user_pic: user.user_pic
+        }
       } else {
         throw new ApiError(ApiErrorNames.USER_NOT_EXIST)
       }
