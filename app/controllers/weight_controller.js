@@ -3,10 +3,7 @@ const {
   Weight,
   User
 } = require('./database')
-const jwt = require('jsonwebtoken')
-const util = require('util')
-const verify = util.promisify(jwt.verify) // 解密
-const secret = 'tuzatuza0713'
+const { verifyID } = require('../utils/token')
 const ApiError = require('../error/ApiError');
 const ApiErrorNames = require('../error/ApiErrorNames');
 
@@ -15,13 +12,9 @@ exports.setWeight = async (ctx, next) => {
   let token = ctx.header.authorization
   if (token) {
     try {
-      let {
-        name,
-        id
-      } = await verify(token.split(' ')[1], secret)
+      let id= await verifyID(token)
       let user = await User.findOne({
         where: {
-          name,
           id
         }
       })
@@ -56,9 +49,7 @@ exports.getWeight = async (ctx, next) => {
   let token = ctx.header.authorization
   if (token) {
     try {
-      let {
-        id
-      } = await verify(token.split(' ')[1], secret)
+      let id= await verifyID(token)
       let user = await User.findAll({
         include: [Weight],
         where: {

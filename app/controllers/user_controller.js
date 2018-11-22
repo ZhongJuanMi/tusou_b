@@ -103,6 +103,11 @@ exports.setInfo = async (ctx, next) => {
   if (ctx.req.file) {
     userInfo.user_pic = ctx.req.file.path.substr(7)
   }
+  for(let key in userInfo){
+    if(!userInfo[key]){
+      userInfo[key]=null
+    }
+  }
   let token = ctx.header.authorization
   if (token) {
     try {
@@ -114,12 +119,7 @@ exports.setInfo = async (ctx, next) => {
       })
       if (user) {
         await user.update(
-          { ...userInfo },
-          {
-            where: {
-              id
-            }
-          }
+          { ...userInfo }
         )
         ctx.body = {
           name: user.name,
