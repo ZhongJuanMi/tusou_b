@@ -99,6 +99,7 @@ exports.getUser = async (ctx, next) => {
 
 // 设置用户信息
 exports.setInfo = async (ctx, next) => {
+  next()
   let userInfo = JSON.parse(ctx.req.body.userInfo)
   if (ctx.req.file) {
     userInfo.user_pic = ctx.req.file.path.substr(7)
