@@ -78,6 +78,9 @@ exports.Blog = this.sequelize.define('blog', {
   },
   is_draft:{
     type:Sequelize.INTEGER
+  },
+  html:{
+    type: Sequelize.STRING
   }
 })
 // 博客分类表

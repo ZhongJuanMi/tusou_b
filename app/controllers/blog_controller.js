@@ -26,7 +26,7 @@ var formatDateTime = function(date) {
 exports.addorsetBlog = async (ctx, next) => {
 
   try {
-    let { title, content, tags, is_draft, id } = ctx.request.body
+    let { title, content,html,tags, is_draft, id } = ctx.request.body
     await Blog.findOrCreate({
       where: {
         id
@@ -34,6 +34,7 @@ exports.addorsetBlog = async (ctx, next) => {
       defaults: {
         title,
         content,
+        html,
         tags,
         is_draft
       }
@@ -44,12 +45,13 @@ exports.addorsetBlog = async (ctx, next) => {
             title,
             content,
             tags,
+            html,
             is_draft
           }).then(blog=>{
             ctx.body=blog.id
           })
         } else {
-          blog.update({ title, content, tags, is_draft })
+          blog.update({ title, content, html,tags, is_draft })
         }
       }
     })
@@ -195,7 +197,7 @@ exports.getBlogList = async (ctx, next) => {
         }
       })
       
-      let _content = el.content.replace(/<\/?.+?>/g, '').substring(0, 100)
+      let _content = el.html.replace(/<\/?.+?>/g, '').substring(0, 100)
       if (_content.length >= 100) {
         _content += '...'
       }
@@ -292,6 +294,7 @@ exports.getBlogDetail = async (ctx, next) => {
     result.update_time = formatDateTime(temp.updatedAt)
     result.title = temp.title
     result.content = temp.content
+    result.html = temp.html
     result.tags = temp.tags
     ctx.body = result
   } catch (err) {
